@@ -1,0 +1,109 @@
+/* Sticky navigation uses the shared warm storefront palette. */
+.navbar {
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+  display: flex;
+  min-height: 78px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 clamp(20px, 6vw, 88px);
+  border-bottom: 1px solid rgba(48, 46, 38, 0.08);
+  background: rgba(248, 247, 243, 0.94);
+  backdrop-filter: blur(16px);
+}
+
+.navbar-brand a {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+}
+
+.logo {
+  display: block;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: white;
+  object-fit: cover;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 30px);
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: #57584f;
+  font-size: 0.91rem;
+  font-weight: 600;
+}
+
+.navbar-links a:hover {
+  color: var(--accent);
+}
+
+.navbar-links .btn-logout {
+  padding: 10px 15px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: border-color 180ms ease, color 180ms ease,
+    background-color 180ms ease;
+}
+
+.navbar-links .btn-logout:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+@media (max-width: 620px) {
+  .navbar {
+    min-height: 68px;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 10px 16px;
+  }
+
+  .navbar-brand a {
+    gap: 8px;
+    font-size: 1.25rem;
+  }
+
+  .logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .navbar-links {
+    gap: 12px;
+  }
+
+  .navbar-links a {
+    min-height: 36px;
+    font-size: 0.8rem;
+  }
+
+  .navbar-links .btn-logout {
+    padding: 7px 9px;
+    font-size: 0.78rem;
+  }
+}

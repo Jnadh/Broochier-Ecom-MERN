@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
+
+/* Centralizes the warm palette, type, controls, and responsive product grid. */
+:root {
+  --ink: #24251f;
+  --muted: #73756d;
+  --paper: #f8f7f3;
+  --surface: #ffffff;
+  --line: #e9e7df;
+  --accent: #b45f42;
+  --accent-dark: #91472f;
+  --accent-soft: #f4e9e2;
+  --olive: #68705a;
+  --shadow: 0 16px 42px rgba(41, 39, 31, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: "DM Sans", sans-serif;
+}
+
+#root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease, background-color 180ms ease,
+    border-color 180ms ease, transform 180ms ease;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--ink);
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+h2 {
+  margin-bottom: 18px;
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  line-height: 1.15;
+}
+
+p {
+  line-height: 1.7;
+}
+
+ul {
+  list-style: none;
+}
+
+.btn {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 22px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  transition: transform 180ms ease, background 180ms ease,
+    border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-dark);
+  background: var(--accent-dark);
+  box-shadow: 0 8px 18px rgba(145, 71, 47, 0.16);
+  filter: none;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(180, 95, 66, 0.35);
+  outline-offset: 3px;
+}
+
+.products-grid,
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.loading-state,
+.empty-state {
+  padding: 44px 24px;
+  border: 1px dashed #d8d4c9;
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .products-grid,
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .products-grid,
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .products-grid,
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
