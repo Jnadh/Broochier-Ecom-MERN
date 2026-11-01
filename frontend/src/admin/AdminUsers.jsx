@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { apiFetch as fetch } from "../api";
 import { AuthContext } from "../context/AuthContext";
 
 const AdminUsers = () => {

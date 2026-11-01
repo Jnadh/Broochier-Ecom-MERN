@@ -8,9 +8,24 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "https://broochier-ecom-mern-plum.vercel.app",
+  process.env.FRONTEND_URL,
+]
+  .filter(Boolean)
+  .map((origin) => origin.replace(/\/+$/, ""));
+
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://127.0.0.1:3000", process.env.FRONTEND_URL],
+    origin: (origin, callback) => {
+      const normalizedOrigin = origin?.replace(/\/+$/, "");
+      if (!origin || allowedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS origin not allowed: ${origin}`));
+    },
     credentials: true,
   }),
 );

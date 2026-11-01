@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiFetch as fetch } from "../api";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/productCard";
 import "../styles/product.css";

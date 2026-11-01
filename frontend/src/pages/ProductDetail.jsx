@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiFetch as fetch } from "../api";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
