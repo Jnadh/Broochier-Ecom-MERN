@@ -12,6 +12,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "https://broochier-ecom-mern-plum.vercel.app",
+  "https://broochier-ecom-mern-7mn8353mg-aaradhya17.vercel.app",
   process.env.FRONTEND_URL,
 ]
   .filter(Boolean)
