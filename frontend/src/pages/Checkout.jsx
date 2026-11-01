@@ -5,7 +5,7 @@ import { AuthContext } from "../context/AuthContext";
 import { clearCart } from "../redux/cartSlice";
 
 const Checkout = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,7 +14,8 @@ const Checkout = () => {
     fullName: "",
     street: "",
     city: "",
-    postalCode: "",
+    state: "",
+    zipCode: "",
     country: "",
   });
 
@@ -23,6 +24,58 @@ const Checkout = () => {
     0,
   );
 
+  const saveOrder = async (paymentId) => {
+    const saveOrderRes = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        items: cartItems.map((item) => ({
+          product: item._id,
+          qty: item.qty,
+          price: item.price,
+        })),
+        totalAmount: totalPrice,
+        address,
+        paymentId,
+      }),
+    });
+
+    if (!saveOrderRes.ok) {
+      const errorData = await saveOrderRes.json().catch(() => ({}));
+      if (saveOrderRes.status === 401) {
+        logout();
+        navigate("/login");
+        throw new Error("Your session expired. Please log in again.");
+      }
+      throw new Error(errorData.message || "Order saving failed");
+    }
+
+    dispatch(clearCart());
+    navigate("/ordersuccess");
+  };
+
+  const bypassPayment = async () => {
+    try {
+      await saveOrder("bypass_txn_" + Date.now());
+    } catch (error) {
+      console.error("Bypass order failed:", error);
+      alert(error.message);
+    }
+  };
+
+  const offerBypass = () => {
+    const fallback = window.confirm(
+      "Razorpay is unavailable. Use Student Bypass Mode to place a test order?",
+    );
+    if (fallback) {
+      return bypassPayment();
+    }
+    return alert("Payment failed to initialize");
+  };
+
   const handlePayment = async () => {
     try {
       const orderRes = await fetch("/api/payment/order", {
@@ -30,22 +83,14 @@ const Checkout = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: totalPrice }),
       });
-      const orderData = await orderRes.json();
+      const orderData = await orderRes.json().catch(() => ({}));
 
       if (!orderRes.ok) {
-        // Razorpay unconfigured exception handler
-        const fallback = window.confirm(
-          "Razorpay keys unconfigured on backend. Use Student Bypass Mode to place test order?",
-        );
-        if (fallback) {
-          return bypassPayment();
-        } else {
-          return alert("Payment failed to initialize");
-        }
+        return offerBypass();
       }
 
       const options = {
-        key: "rzp_test_dummykey123", // Student dummy fallback
+        key: orderData.key_id || "rzp_test_dummykey123",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Broochier",
@@ -58,25 +103,10 @@ const Checkout = () => {
             body: JSON.stringify(response),
           });
           if (verifyRes.ok) {
-            const saveOrderRes = await fetch("/api/orders", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${user.token}`,
-              },
-              body: JSON.stringify({
-                items: cartItems,
-                totalAmount: totalPrice,
-                address,
-                paymentId: response.razorpay_payment_id,
-              }),
-            });
-
-            if (saveOrderRes.ok) {
-              dispatch(clearCart());
-              navigate("/ordersuccess");
-            } else {
-              alert("Order saving failed");
+            try {
+              await saveOrder(response.razorpay_payment_id);
+            } catch (error) {
+              alert(error.message);
             }
           } else {
             alert("Payment verification failed");
@@ -95,27 +125,8 @@ const Checkout = () => {
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const bypassPayment = async () => {
-    const saveOrderRes = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify({
-        items: cartItems,
-        totalAmount: totalPrice,
-        address,
-        paymentId: "bypass_txn_" + Date.now(),
-      }),
-    });
-    if (saveOrderRes.ok) {
-      dispatch(clearCart());
-      navigate("/ordersuccess");
+      console.error("Payment initialization failed:", error);
+      return offerBypass();
     }
   };
 
@@ -160,11 +171,18 @@ const Checkout = () => {
           />
           <input
             type="text"
+            placeholder="State"
+            required
+            value={address.state}
+            onChange={(e) => setAddress({ ...address, state: e.target.value })}
+          />
+          <input
+            type="text"
             placeholder="Postal Code"
             required
-            value={address.postalCode}
+            value={address.zipCode}
             onChange={(e) =>
-              setAddress({ ...address, postalCode: e.target.value })
+              setAddress({ ...address, zipCode: e.target.value })
             }
           />
           <input
@@ -177,7 +195,7 @@ const Checkout = () => {
             }
           />
           <div className="checkout-summary">
-            <h4>Total to Pay: ₹{totalPrice.toFixed(2)}</h4>
+            <h4>Total to Pay: INR {totalPrice.toFixed(2)}</h4>
             <button type="submit" className="btn">
               Pay Now
             </button>

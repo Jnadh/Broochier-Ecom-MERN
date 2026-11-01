@@ -94,7 +94,9 @@ const demoOrders = [
 
 async function seedDatabase() {
   if (!process.env.MONGO_URI) {
-    throw new Error("MONGO_URI is not set. Add it to backend/.env before seeding.");
+    throw new Error(
+      "MONGO_URI is not set. Add it to backend/.env before seeding.",
+    );
   }
 
   await mongoose.connect(process.env.MONGO_URI);

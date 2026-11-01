@@ -110,8 +110,10 @@
 }
 
 .search-bar {
+  display: block;
   width: min(340px, 100%);
   min-height: 48px;
+  margin-bottom: 30px;
   padding: 0 15px;
   border: 1px solid var(--line);
   border-radius: 4px;
