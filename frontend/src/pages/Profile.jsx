@@ -36,7 +36,7 @@ const Profile = () => {
       }
     };
     fetchMyOrders();
-  }, [user, navigate]);
+  }, [user, navigate, logout]);
 
   const handleLogout = () => {
     logout();
@@ -123,7 +123,8 @@ const Profile = () => {
       {loading ? (
         <p style={{ color: "#a1a1aa" }}>Fetching your orders...</p>
       ) : orders.length === 0 ? (
-        <div className="profile-empty"
+        <div
+          className="profile-empty"
           style={{
             background: "#09090b",
             padding: "30px",

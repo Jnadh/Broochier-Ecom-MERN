@@ -85,7 +85,7 @@ const About = () => {
           📸 Instagram
         </a>
         <a
-          href=""
+          href="https://www.linkedin.com/in/aaradhya-jain-46766442a/"
           target="_blank"
           rel="noreferrer"
           style={{
